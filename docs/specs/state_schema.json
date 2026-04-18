@@ -1,126 +1,350 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://narrative-os.example.com/schemas/state.json",
-  "title": "Narrative OS State Document",
-  "description": "The single source of truth for a story session.",
-  "type": "object",
-  "required": [
-    "story_id",
-    "title",
-    "chapter",
-    "genre_profile",
-    "characters",
-    "relationships",
-    "event_ledger",
-    "promises",
-    "ripples",
-    "locations",
-    "memory_pack",
-    "chapters_written"
-  ],
-  "properties": {
-    "story_id": {
-      "type": "string",
-      "format": "uuid",
-      "description": "Unique identifier for the story session."
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://narrative-os.example.com/schemas/state.json",
+    "title": "Narrative OS State Document",
+    "description": "The single source of truth for a story session.",
+    "type": "object",
+    "required": [
+        "story_id",
+        "title",
+        "chapter",
+        "genre_profile",
+        "characters",
+        "relationships",
+        "event_ledger",
+        "promises",
+        "ripples",
+        "locations",
+        "memory_pack",
+        "chapters_written"
+    ],
+    "properties": {
+        "story_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the story session."
+        },
+        "title": {
+            "type": "string",
+            "description": "Working title of the story."
+        },
+        "chapter": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Current chapter number (0 = not yet started)."
+        },
+        "genre_profile": {
+            "$ref": "#/definitions/genre_profile"
+        },
+        "characters": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/character"
+            },
+            "description": "Map of character key (e.g., 'harry') to character record."
+        },
+        "relationships": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/relationship"
+            },
+            "description": "Map of relationship pair key (e.g., 'harry_hermione') to relationship record."
+        },
+        "event_ledger": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/event"
+            },
+            "description": "Chronological list of all significant story events."
+        },
+        "promises": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/promise"
+            },
+            "description": "All unresolved and recently resolved plot promises."
+        },
+        "ripples": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/ripple"
+            },
+            "description": "Pending delayed consequences."
+        },
+        "locations": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/location"
+            },
+            "description": "Map of location name to location record."
+        },
+        "memory_pack": {
+            "$ref": "#/definitions/memory_pack"
+        },
+        "chapters_written": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Full prose text of each completed chapter, in order."
+        }
     },
-    "title": {
-      "type": "string",
-      "description": "Working title of the story."
-    },
-    "chapter": {
-      "type": "integer",
-      "minimum": 0,
-      "description": "Current chapter number (0 = not yet started)."
-    },
-    "genre_profile": {
-      "$ref": "#/definitions/genre_profile"
-    },
-    "characters": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/character"
-      },
-      "description": "Map of character key (e.g., 'harry') to character record."
-    },
-    "relationships": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/relationship"
-      },
-      "description": "Map of relationship pair key (e.g., 'harry_hermione') to relationship record."
-    },
-    "event_ledger": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/event"
-      },
-      "description": "Chronological list of all significant story events."
-    },
-    "promises": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/promise"
-      },
-      "description": "All unresolved and recently resolved plot promises."
-    },
-    "ripples": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ripple"
-      },
-      "description": "Pending delayed consequences."
-    },
-    "locations": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/location"
-      },
-      "description": "Map of location name to location record."
-    },
-    "memory_pack": {
-      "$ref": "#/definitions/memory_pack"
-    },
-    "chapters_written": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Full prose text of each completed chapter, in order."
+    "definitions": {
+        "genre_profile": {
+            "type": "object",
+            "required": [
+                "genre",
+                "tone",
+                "content_rating",
+                "pacing",
+                "style_notes"
+            ],
+            "properties": {
+                "genre": {
+                    "type": "string",
+                    "description": "Primary genre: romance, thriller, dark fantasy, literary fiction, horror, fanfiction, etc."
+                },
+                "tone": {
+                    "type": "string",
+                    "description": "Descriptive tone guidance: e.g., 'warm and intimate', 'gritty and tense', 'wry and humorous'."
+                },
+                "content_rating": {
+                    "type": "string",
+                    "enum": [
+                        "teen",
+                        "mature",
+                        "adult"
+                    ],
+                    "description": "Controls explicitness of violence, language, and sexual content."
+                },
+                "pacing": {
+                    "type": "string",
+                    "enum": [
+                        "slow-burn",
+                        "medium",
+                        "fast"
+                    ],
+                    "description": "How quickly promises resolve and relationships advance."
+                },
+                "style_notes": {
+                    "type": "string",
+                    "description": "Freeform style guidance injected into prompts: POV, tense, prose density, etc."
+                },
+                "world_rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Hard facts the Continuity Validator checks against. e.g., 'magic exists', 'no time travel', 'death is permanent'."
+                },
+                "source_material": {
+                    "type": "string",
+                    "description": "If fanfiction, the original work (e.g., 'Harry Potter by J.K. Rowling')."
+                },
+                "canon_departure_point": {
+                    "type": "string",
+                    "description": "Where the story diverges from canon (e.g., 'end of Chamber of Secrets')."
+                },
+                "canon_facts_retained": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Canon elements that remain true (character names, magic system, etc.)."
+                },
+                "canon_facts_changed": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Canon elements deliberately altered (e.g., 'Harry/Hermione romance', 'Dumbledore as antagonist')."
+                },
+                "beat_weighting": {
+                    "type": "object",
+                    "description": "Optional. Manual override for beat emphasis (e.g., heavy on Deepening for romance).",
+                    "properties": {
+                        "heavy_beats": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 7
+                            }
+                        },
+                        "light_beats": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 7
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "character": {
+            "type": "object",
+            "required": [
+                "full_name",
+                "age",
+                "emotional_state",
+                "location",
+                "physical_description",
+                "current_appearance",
+                "physical_state",
+                "key_possessions",
+                "abilities",
+                "trigger_list"
+            ],
+            "properties": {
+                "full_name": {
+                    "type": "string",
+                    "description": "Character's full name."
+                },
+                "age": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Current age in years."
+                },
+                "identity": {
+                    "type": "string",
+                    "description": "Brief identity markers: blood status, house, title, role. e.g., 'half-blood, Gryffindor, Lord Potter'."
+                },
+                "emotional_state": {
+                    "type": "string",
+                    "description": "Current primary emotion (e.g., 'nervous but hopeful')."
+                },
+                "hidden_feelings": {
+                    "type": "string",
+                    "description": "Emotion the character is suppressing or unaware of (e.g., 'terrified of losing Hermione')."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Current location (must match a key in the 'locations' object)."
+                },
+                "physical_description": {
+                    "type": "object",
+                    "description": "Static physical traits that rarely change. Used for consistent description across chapters.",
+                    "required": [
+                        "height",
+                        "build",
+                        "hair_color",
+                        "eye_color",
+                        "skin_tone"
+                    ],
+                    "properties": {
+                        "height": {
+                            "type": "string",
+                            "example": "5'11\""
+                        },
+                        "build": {
+                            "type": "string",
+                            "example": "slender, athletic"
+                        },
+                        "hair_color": {
+                            "type": "string",
+                            "example": "jet black, untidy"
+                        },
+                        "eye_color": {
+                            "type": "string",
+                            "example": "emerald green"
+                        },
+                        "skin_tone": {
+                            "type": "string",
+                            "example": "pale, faint freckles across nose"
+                        },
+                        "distinguishing_features": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Permanent or semi-permanent features: scars, birthmarks, tattoos, unique traits."
+                        },
+                        "typical_clothing": {
+                            "type": "string",
+                            "description": "What they usually wear, for default reference."
+                        }
+                    }
+                },
+                "current_appearance": {
+                    "type": "object",
+                    "description": "Temporary appearance changes updated each chapter. Reflects what they look like right now.",
+                    "required": [
+                        "clothing"
+                    ],
+                    "properties": {
+                        "clothing": {
+                            "type": "string",
+                            "description": "What they are currently wearing. Use 'none' or 'unclothed' for nudity."
+                        },
+                        "injuries_visible": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Visible wounds, bandages, etc."
+                        },
+                        "grooming_notes": {
+                            "type": "string",
+                            "description": "Hair state, stubble, cleanliness, etc."
+                        }
+                    }
+                },
+                "physical_state": {
+                    "type": "string",
+                    "description": "Health, exhaustion, magical drain. e.g., 'fully healed', 'exhausted', 'wounded arm'."
+                },
+                "key_possessions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Important items they carry or own (wands, rings, cloaks, weapons)."
+                },
+                "abilities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Magical or mundane skills (e.g., 'parseltongue', 'corporeal patronus', 'occlumency')."
+                },
+                "last_action": {
+                    "type": "string",
+                    "description": "The most recent significant action taken by the character in the narrative."
+                },
+                "trigger_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Specific stimuli that provoke strong emotional responses (e.g., 'dementors -> mother's death')."
+                }
+            }
+        },
+        "relationship": {
+            "type": "object",
+            "description": "The relationship between two characters."
+        },
+        "event": {
+            "type": "object",
+            "description": "A significant story event with causal links."
+        },
+        "promise": {
+            "type": "object",
+            "description": "An unresolved plot thread promised to the reader."
+        },
+        "ripple": {
+            "type": "object",
+            "description": "A delayed consequence scheduled to trigger later."
+        },
+        "location": {
+            "type": "object",
+            "description": "A significant place in the story world."
+        },
+        "memory_pack": {
+            "type": "object",
+            "description": "Compressed snapshot of state used for context."
+        }
     }
-  },
-  "definitions": {
-    "genre_profile": {
-      "type": "object",
-      "description": "Configuration that tailors prompts and behavior for the story's genre."
-    },
-    "character": {
-      "type": "object",
-      "description": "A single character's current state."
-    },
-    "relationship": {
-      "type": "object",
-      "description": "The relationship between two characters."
-    },
-    "event": {
-      "type": "object",
-      "description": "A significant story event with causal links."
-    },
-    "promise": {
-      "type": "object",
-      "description": "An unresolved plot thread promised to the reader."
-    },
-    "ripple": {
-      "type": "object",
-      "description": "A delayed consequence scheduled to trigger later."
-    },
-    "location": {
-      "type": "object",
-      "description": "A significant place in the story world."
-    },
-    "memory_pack": {
-      "type": "object",
-      "description": "Compressed snapshot of state used for context."
-    }
-  }
 }
