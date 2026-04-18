@@ -1,0 +1,260 @@
+// =============================================================================
+// NARRATIVE OS — CLEANED DATABASE SCHEMA
+// PostgreSQL 15+
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// CORE ENTITIES
+// -----------------------------------------------------------------------------
+
+Table entities {
+  id UUID [pk, default: `gen_random_uuid()`]
+  type VARCHAR(50) [not null] // e.g., Character, Location, Object, Event, etc.
+  name VARCHAR(255) [not null]
+  state JSONB [not null, default: '{}']
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+  updated_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    type
+    name
+    (type, name)
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RELATIONSHIPS
+// -----------------------------------------------------------------------------
+
+Table relationships {
+  id UUID [pk, default: `gen_random_uuid()`]
+  source_id UUID [not null, ref: > entities.id]
+  target_id UUID [not null, ref: > entities.id]
+  type VARCHAR(100) [not null]
+  strength SMALLINT [note: '1-10 scale']
+  state JSONB [not null, default: '{}']
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+  updated_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    (source_id, type)
+    (target_id, type)
+    type
+  }
+}
+
+// -----------------------------------------------------------------------------
+// SCENES
+// -----------------------------------------------------------------------------
+
+Table scenes {
+  id UUID [pk, default: `gen_random_uuid()`]
+  title VARCHAR(255)
+  chapter_number INT
+  order_in_chapter INT [default: 1]
+  status VARCHAR(20) [default: 'draft'] // draft, revised, final
+  prose TEXT [default: '']
+  word_count INT [default: 0]
+  pov_character_id UUID [ref: > entities.id]
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+  updated_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    chapter_number
+    (chapter_number, order_in_chapter)
+    pov_character_id
+  }
+}
+
+// -----------------------------------------------------------------------------
+// EVENTS (IMMUTABLE LOG)
+// -----------------------------------------------------------------------------
+
+Table events {
+  id UUID [pk, default: `gen_random_uuid()`]
+  scene_id UUID [ref: > scenes.id]
+  type VARCHAR(50) [not null]
+  initiator_id UUID [ref: > entities.id]
+  description TEXT
+  state_changes JSONB [not null, default: '[]']
+  witnesses UUID[]
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    scene_id
+    initiator_id
+    type
+    created_at
+  }
+}
+
+// -----------------------------------------------------------------------------
+// PROMISES (OPEN THREADS)
+// -----------------------------------------------------------------------------
+
+Table promises {
+  id UUID [pk, default: `gen_random_uuid()`]
+  description TEXT [not null]
+  setup_event_id UUID [ref: > events.id]
+  status VARCHAR(20) [not null, default: 'open'] // open, resolved, abandoned
+  resolution_event_id UUID [ref: > events.id]
+  target_scene VARCHAR(255)
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    setup_event_id
+    resolution_event_id
+    status
+  }
+}
+
+// -----------------------------------------------------------------------------
+// VOCABULARY (ONTOLOGY)
+// -----------------------------------------------------------------------------
+
+Table vocabularies {
+  id UUID [pk, default: `gen_random_uuid()`]
+  term_type VARCHAR(20) [not null] // class, property
+  uri VARCHAR(500) [unique, not null]
+  local_name VARCHAR(100) [not null]
+  label VARCHAR(200) [not null]
+  description TEXT
+  domain VARCHAR(500)
+  range VARCHAR(500)
+  category VARCHAR(100)
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    term_type
+    local_name
+    category
+  }
+}
+
+// -----------------------------------------------------------------------------
+// STORY ARCS
+// -----------------------------------------------------------------------------
+
+Table arcs {
+  id UUID [pk, default: `gen_random_uuid()`]
+  name VARCHAR(255) [not null]
+  type VARCHAR(20) [not null] // character, plot
+  description TEXT
+  status VARCHAR(20) [default: 'active'] // active, completed, abandoned
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+  updated_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    type
+    status
+  }
+}
+
+Table character_arcs {
+  character_id UUID [ref: > entities.id]
+  arc_id UUID [ref: > arcs.id]
+  role VARCHAR(50)
+  progress SMALLINT [default: 0]
+
+  indexes {
+    (character_id, arc_id) [pk]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// MEMORIES
+// -----------------------------------------------------------------------------
+
+Table memories {
+  id UUID [pk, default: `gen_random_uuid()`]
+  character_id UUID [not null, ref: > entities.id]
+  event_id UUID [ref: > events.id]
+  clarity SMALLINT [default: 100]
+  emotional_weight SMALLINT [default: 5]
+  last_recalled_at TIMESTAMPTZ
+  notes TEXT
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+
+  indexes {
+    character_id
+    event_id
+  }
+}
+
+// -----------------------------------------------------------------------------
+// THEMES
+// -----------------------------------------------------------------------------
+
+Table themes {
+  id UUID [pk, default: `gen_random_uuid()`]
+  name VARCHAR(100) [unique, not null]
+  description TEXT
+}
+
+Table scene_themes {
+  scene_id UUID [ref: > scenes.id]
+  theme_id UUID [ref: > themes.id]
+  relevance SMALLINT [default: 5]
+
+  indexes {
+    (scene_id, theme_id) [pk]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// TIMELINES
+// -----------------------------------------------------------------------------
+
+Table timelines {
+  id UUID [pk, default: `gen_random_uuid()`]
+  name VARCHAR(100) [not null]
+  is_prime BOOLEAN [default: false]
+  divergence_event_id UUID [ref: > events.id]
+  status VARCHAR(20) [default: 'active']
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+}
+
+Table character_timelines {
+  character_id UUID [ref: > entities.id]
+  timeline_id UUID [ref: > timelines.id]
+  joined_at TIMESTAMPTZ [default: `now()`]
+
+  indexes {
+    (character_id, timeline_id) [pk]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// USERS & PROJECTS
+// -----------------------------------------------------------------------------
+
+Table users {
+  id UUID [pk, default: `gen_random_uuid()`]
+  username VARCHAR(50) [unique, not null]
+  email VARCHAR(255) [unique]
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+}
+
+Table projects {
+  id UUID [pk, default: `gen_random_uuid()`]
+  user_id UUID [not null, ref: > users.id]
+  name VARCHAR(255) [not null]
+  description TEXT
+  created_at TIMESTAMPTZ [not null, default: `now()`]
+  updated_at TIMESTAMPTZ [not null, default: `now()`]
+}
+
+// -----------------------------------------------------------------------------
+// AUDIT LOG
+// -----------------------------------------------------------------------------
+
+Table audit_log {
+  id UUID [pk, default: `gen_random_uuid()`]
+  table_name VARCHAR(50) [not null]
+  record_id UUID [not null]
+  action VARCHAR(20) [not null] // insert, update, delete
+  changed_by VARCHAR(255)
+  changed_at TIMESTAMPTZ [not null, default: `now()`]
+  old_values JSONB
+  new_values JSONB
+}

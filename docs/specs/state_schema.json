@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://narrative-os.example.com/schemas/state.json",
+  "title": "Narrative OS State Document",
+  "description": "The single source of truth for a story session.",
+  "type": "object",
+  "required": [
+    "story_id",
+    "title",
+    "chapter",
+    "genre_profile",
+    "characters",
+    "relationships",
+    "event_ledger",
+    "promises",
+    "ripples",
+    "locations",
+    "memory_pack",
+    "chapters_written"
+  ],
+  "properties": {
+    "story_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the story session."
+    },
+    "title": {
+      "type": "string",
+      "description": "Working title of the story."
+    },
+    "chapter": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Current chapter number (0 = not yet started)."
+    },
+    "genre_profile": {
+      "$ref": "#/definitions/genre_profile"
+    },
+    "characters": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/character"
+      },
+      "description": "Map of character key (e.g., 'harry') to character record."
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/relationship"
+      },
+      "description": "Map of relationship pair key (e.g., 'harry_hermione') to relationship record."
+    },
+    "event_ledger": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/event"
+      },
+      "description": "Chronological list of all significant story events."
+    },
+    "promises": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/promise"
+      },
+      "description": "All unresolved and recently resolved plot promises."
+    },
+    "ripples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ripple"
+      },
+      "description": "Pending delayed consequences."
+    },
+    "locations": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/location"
+      },
+      "description": "Map of location name to location record."
+    },
+    "memory_pack": {
+      "$ref": "#/definitions/memory_pack"
+    },
+    "chapters_written": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Full prose text of each completed chapter, in order."
+    }
+  },
+  "definitions": {
+    "genre_profile": {
+      "type": "object",
+      "description": "Configuration that tailors prompts and behavior for the story's genre."
+    },
+    "character": {
+      "type": "object",
+      "description": "A single character's current state."
+    },
+    "relationship": {
+      "type": "object",
+      "description": "The relationship between two characters."
+    },
+    "event": {
+      "type": "object",
+      "description": "A significant story event with causal links."
+    },
+    "promise": {
+      "type": "object",
+      "description": "An unresolved plot thread promised to the reader."
+    },
+    "ripple": {
+      "type": "object",
+      "description": "A delayed consequence scheduled to trigger later."
+    },
+    "location": {
+      "type": "object",
+      "description": "A significant place in the story world."
+    },
+    "memory_pack": {
+      "type": "object",
+      "description": "Compressed snapshot of state used for context."
+    }
+  }
+}
