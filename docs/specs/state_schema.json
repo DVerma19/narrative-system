@@ -324,11 +324,176 @@
         },
         "relationship": {
             "type": "object",
-            "description": "The relationship between two characters."
+            "required": [
+                "stage",
+                "trust",
+                "attraction",
+                "tension",
+                "comfort",
+                "history"
+            ],
+            "properties": {
+                "stage": {
+                    "type": "string",
+                    "enum": [
+                        "Strangers",
+                        "Friends",
+                        "Close Friends",
+                        "Romantic Tension",
+                        "Dating",
+                        "Betrothed",
+                        "Bonded",
+                        "Enemies",
+                        "Married",
+                        "Companions",
+                        "Rivals",
+                        "Mentor/Protege",
+                        "Family"
+                    ],
+                    "description": "Current relationship stage. Advancement requires specific story events."
+                },
+                "trust": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "Willingness to confide, rely on, and believe."
+                },
+                "attraction": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "Romantic or emotional pull. Can be one-sided; tracked per direction."
+                },
+                "tension": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "Unresolved conflict, jealousy, fear, resentment, withheld truth."
+                },
+                "comfort": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "Ease of being together. How natural silence feels."
+                },
+                "history": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Log of dimension changes with chapter prefix. e.g., 'ch3: +1 trust — shared Dursley secrets'."
+                }
+            }
         },
         "event": {
             "type": "object",
-            "description": "A significant story event with causal links."
+            "required": [
+                "event_id",
+                "chapter",
+                "type",
+                "initiator",
+                "participants",
+                "location",
+                "summary",
+                "state_changes",
+                "relationship_changes",
+                "promises_created",
+                "promises_resolved",
+                "causal_links"
+            ],
+            "properties": {
+                "event_id": {
+                    "type": "string",
+                    "description": "Unique identifier, backend-assigned. Format: E-001, E-002, etc.",
+                    "pattern": "^E-\\d{3}$"
+                },
+                "chapter": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Chapter number where this event occurred."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Event category: confrontation, confession, battle, ritual, discovery, betrayal, gift, declaration, death, intimate_moment, etc."
+                },
+                "initiator": {
+                    "type": "string",
+                    "description": "Character who caused or triggered the event."
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "All characters involved or who witnessed the event."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Where the event took place (must match a key in 'locations')."
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "One-sentence description of what happened."
+                },
+                "state_changes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Character attribute changes. e.g., 'Harry: scar clear, glasses no longer needed'."
+                },
+                "relationship_changes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Dimension changes with reason. e.g., 'Harry/Hermione: Trust +1 — shared secrets'."
+                },
+                "promises_created": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Promise IDs created by this event."
+                },
+                "promises_resolved": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Promise IDs resolved by this event."
+                },
+                "causal_links": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "target_event_id",
+                            "description"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "Causes",
+                                    "Enables",
+                                    "Prevents",
+                                    "Motivates"
+                                ]
+                            },
+                            "target_event_id": {
+                                "type": "string",
+                                "description": "Event ID that is linked."
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "How this event relates to the target."
+                            }
+                        }
+                    }
+                }
+            }
         },
         "promise": {
             "type": "object",
