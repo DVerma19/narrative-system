@@ -135,7 +135,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "Hard facts the Continuity Validator checks against. e.g., 'magic exists', 'no time travel', 'death is permanent'."
+                    "description": "Hard facts the Continuity Validator checks against."
                 },
                 "source_material": {
                     "type": "string",
@@ -143,25 +143,25 @@
                 },
                 "canon_departure_point": {
                     "type": "string",
-                    "description": "Where the story diverges from canon (e.g., 'end of Chamber of Secrets')."
+                    "description": "Where the story diverges from canon."
                 },
                 "canon_facts_retained": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "Canon elements that remain true (character names, magic system, etc.)."
+                    "description": "Canon elements that remain true."
                 },
                 "canon_facts_changed": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "Canon elements deliberately altered (e.g., 'Harry/Hermione romance', 'Dumbledore as antagonist')."
+                    "description": "Canon elements deliberately altered."
                 },
                 "beat_weighting": {
                     "type": "object",
-                    "description": "Optional. Manual override for beat emphasis (e.g., heavy on Deepening for romance).",
+                    "description": "Optional manual override for beat emphasis.",
                     "properties": {
                         "heavy_beats": {
                             "type": "array",
@@ -199,33 +199,28 @@
             ],
             "properties": {
                 "full_name": {
-                    "type": "string",
-                    "description": "Character's full name."
+                    "type": "string"
                 },
                 "age": {
                     "type": "integer",
-                    "minimum": 0,
-                    "description": "Current age in years."
+                    "minimum": 0
                 },
                 "identity": {
                     "type": "string",
-                    "description": "Brief identity markers: blood status, house, title, role. e.g., 'half-blood, Gryffindor, Lord Potter'."
+                    "description": "Brief identity markers."
                 },
                 "emotional_state": {
-                    "type": "string",
-                    "description": "Current primary emotion (e.g., 'nervous but hopeful')."
+                    "type": "string"
                 },
                 "hidden_feelings": {
-                    "type": "string",
-                    "description": "Emotion the character is suppressing or unaware of (e.g., 'terrified of losing Hermione')."
+                    "type": "string"
                 },
                 "location": {
                     "type": "string",
-                    "description": "Current location (must match a key in the 'locations' object)."
+                    "description": "Must match a key in 'locations'."
                 },
                 "physical_description": {
                     "type": "object",
-                    "description": "Static physical traits that rarely change. Used for consistent description across chapters.",
                     "required": [
                         "height",
                         "build",
@@ -235,90 +230,75 @@
                     ],
                     "properties": {
                         "height": {
-                            "type": "string",
-                            "example": "5'11\""
+                            "type": "string"
                         },
                         "build": {
-                            "type": "string",
-                            "example": "slender, athletic"
+                            "type": "string"
                         },
                         "hair_color": {
-                            "type": "string",
-                            "example": "jet black, untidy"
+                            "type": "string"
                         },
                         "eye_color": {
-                            "type": "string",
-                            "example": "emerald green"
+                            "type": "string"
                         },
                         "skin_tone": {
-                            "type": "string",
-                            "example": "pale, faint freckles across nose"
+                            "type": "string"
                         },
                         "distinguishing_features": {
                             "type": "array",
                             "items": {
                                 "type": "string"
-                            },
-                            "description": "Permanent or semi-permanent features: scars, birthmarks, tattoos, unique traits."
+                            }
                         },
                         "typical_clothing": {
-                            "type": "string",
-                            "description": "What they usually wear, for default reference."
+                            "type": "string"
                         }
                     }
                 },
                 "current_appearance": {
                     "type": "object",
-                    "description": "Temporary appearance changes updated each chapter. Reflects what they look like right now.",
                     "required": [
                         "clothing"
                     ],
                     "properties": {
                         "clothing": {
                             "type": "string",
-                            "description": "What they are currently wearing. Use 'none' or 'unclothed' for nudity."
+                            "description": "Use 'none' or 'unclothed' for nudity."
                         },
                         "injuries_visible": {
                             "type": "array",
                             "items": {
                                 "type": "string"
-                            },
-                            "description": "Visible wounds, bandages, etc."
+                            }
                         },
                         "grooming_notes": {
-                            "type": "string",
-                            "description": "Hair state, stubble, cleanliness, etc."
+                            "type": "string"
                         }
                     }
                 },
                 "physical_state": {
-                    "type": "string",
-                    "description": "Health, exhaustion, magical drain. e.g., 'fully healed', 'exhausted', 'wounded arm'."
+                    "type": "string"
                 },
                 "key_possessions": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Important items they carry or own (wands, rings, cloaks, weapons)."
+                    }
                 },
                 "abilities": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Magical or mundane skills (e.g., 'parseltongue', 'corporeal patronus', 'occlumency')."
+                    }
                 },
                 "last_action": {
-                    "type": "string",
-                    "description": "The most recent significant action taken by the character in the narrative."
+                    "type": "string"
                 },
                 "trigger_list": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Specific stimuli that provoke strong emotional responses (e.g., 'dementors -> mother's death')."
+                    }
                 }
             }
         },
@@ -337,51 +317,54 @@
                     "type": "string",
                     "enum": [
                         "Strangers",
+                        "Acquaintances",
                         "Friends",
                         "Close Friends",
                         "Romantic Tension",
                         "Dating",
                         "Betrothed",
                         "Bonded",
-                        "Enemies",
                         "Married",
-                        "Companions",
+                        "Enemies",
                         "Rivals",
+                        "Companions",
+                        "Allies",
                         "Mentor/Protege",
-                        "Family"
+                        "Family",
+                        "Exes"
                     ],
-                    "description": "Current relationship stage. Advancement requires specific story events."
+                    "description": "Current relationship stage."
                 },
                 "trust": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10,
-                    "description": "Willingness to confide, rely on, and believe."
+                    "maximum": 10
                 },
                 "attraction": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10,
-                    "description": "Romantic or emotional pull. Can be one-sided; tracked per direction."
+                    "maximum": 10
                 },
                 "tension": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10,
-                    "description": "Unresolved conflict, jealousy, fear, resentment, withheld truth."
+                    "maximum": 10
                 },
                 "comfort": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10,
-                    "description": "Ease of being together. How natural silence feels."
+                    "maximum": 10
                 },
                 "history": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "Log of dimension changes with chapter prefix. e.g., 'ch3: +1 trust — shared Dursley secrets'."
+                    "description": "Log of dimension changes with chapter prefix."
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Optional contextual notes."
                 }
             }
         },
@@ -404,64 +387,53 @@
             "properties": {
                 "event_id": {
                     "type": "string",
-                    "description": "Unique identifier, backend-assigned. Format: E-001, E-002, etc.",
                     "pattern": "^E-\\d{3}$"
                 },
                 "chapter": {
                     "type": "integer",
-                    "minimum": 1,
-                    "description": "Chapter number where this event occurred."
+                    "minimum": 1
                 },
                 "type": {
-                    "type": "string",
-                    "description": "Event category: confrontation, confession, battle, ritual, discovery, betrayal, gift, declaration, death, intimate_moment, etc."
+                    "type": "string"
                 },
                 "initiator": {
-                    "type": "string",
-                    "description": "Character who caused or triggered the event."
+                    "type": "string"
                 },
                 "participants": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "All characters involved or who witnessed the event."
+                    }
                 },
                 "location": {
-                    "type": "string",
-                    "description": "Where the event took place (must match a key in 'locations')."
+                    "type": "string"
                 },
                 "summary": {
-                    "type": "string",
-                    "description": "One-sentence description of what happened."
+                    "type": "string"
                 },
                 "state_changes": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Character attribute changes. e.g., 'Harry: scar clear, glasses no longer needed'."
+                    }
                 },
                 "relationship_changes": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Dimension changes with reason. e.g., 'Harry/Hermione: Trust +1 — shared secrets'."
+                    }
                 },
                 "promises_created": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Promise IDs created by this event."
+                    }
                 },
                 "promises_resolved": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "description": "Promise IDs resolved by this event."
+                    }
                 },
                 "causal_links": {
                     "type": "array",
@@ -483,12 +455,10 @@
                                 ]
                             },
                             "target_event_id": {
-                                "type": "string",
-                                "description": "Event ID that is linked."
+                                "type": "string"
                             },
                             "description": {
-                                "type": "string",
-                                "description": "How this event relates to the target."
+                                "type": "string"
                             }
                         }
                     }
@@ -497,19 +467,279 @@
         },
         "promise": {
             "type": "object",
-            "description": "An unresolved plot thread promised to the reader."
+            "required": [
+                "promise_id",
+                "type",
+                "description",
+                "setup_event",
+                "status",
+                "priority",
+                "created_chapter"
+            ],
+            "properties": {
+                "promise_id": {
+                    "type": "string",
+                    "pattern": "^P-\\d{3}$"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "prophecy",
+                        "secret",
+                        "revenge",
+                        "confession",
+                        "return",
+                        "mystery",
+                        "threat",
+                        "oath",
+                        "mission",
+                        "romance"
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                },
+                "setup_event": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "Pending",
+                        "In Progress",
+                        "Resolved",
+                        "Abandoned"
+                    ]
+                },
+                "priority": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                },
+                "created_chapter": {
+                    "type": "integer"
+                },
+                "planned_resolution": {
+                    "type": "string"
+                },
+                "resolved_chapter": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "resolution_event": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
         },
         "ripple": {
             "type": "object",
-            "description": "A delayed consequence scheduled to trigger later."
+            "required": [
+                "ripple_id",
+                "source_event",
+                "source_chapter",
+                "condition",
+                "effect",
+                "priority",
+                "status"
+            ],
+            "properties": {
+                "ripple_id": {
+                    "type": "string",
+                    "pattern": "^R-\\d{3}$"
+                },
+                "source_event": {
+                    "type": "string"
+                },
+                "source_chapter": {
+                    "type": "integer"
+                },
+                "target_character": {
+                    "type": "string"
+                },
+                "condition": {
+                    "type": "string",
+                    "description": "What must happen for this ripple to trigger."
+                },
+                "effect": {
+                    "type": "string",
+                    "description": "What happens when triggered."
+                },
+                "priority": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                },
+                "expires_chapter": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "Pending",
+                        "Triggered",
+                        "Expired"
+                    ]
+                }
+            }
         },
         "location": {
             "type": "object",
-            "description": "A significant place in the story world."
+            "required": [
+                "name",
+                "current_occupants",
+                "state"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "current_occupants": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "active_wards": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "known_secrets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "state": {
+                    "type": "string",
+                    "enum": [
+                        "pristine",
+                        "damaged",
+                        "destroyed",
+                        "abandoned",
+                        "under siege"
+                    ]
+                },
+                "last_visited_chapter": {
+                    "type": "integer"
+                }
+            }
         },
         "memory_pack": {
             "type": "object",
-            "description": "Compressed snapshot of state used for context."
+            "required": [
+                "last_chapter_summary",
+                "active_promises",
+                "relationship_snapshot",
+                "emotional_states",
+                "pending_ripples",
+                "unresolved_conflicts"
+            ],
+            "properties": {
+                "last_chapter_summary": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 3,
+                    "maxItems": 5
+                },
+                "active_promises": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "desc",
+                            "priority",
+                            "status"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "desc": {
+                                "type": "string"
+                            },
+                            "priority": {
+                                "type": "integer"
+                            },
+                            "status": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "relationship_snapshot": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                            "stage",
+                            "trust",
+                            "attraction",
+                            "tension",
+                            "comfort"
+                        ],
+                        "properties": {
+                            "stage": {
+                                "type": "string"
+                            },
+                            "trust": {
+                                "type": "integer"
+                            },
+                            "attraction": {
+                                "type": "integer"
+                            },
+                            "tension": {
+                                "type": "integer"
+                            },
+                            "comfort": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "emotional_states": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "pending_ripples": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "effect"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "effect": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "unresolved_conflicts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
         }
     }
 }
